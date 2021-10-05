@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>style.qss</file>
+        <file>icons/icon.icns</file>
+        <file>icons/icon.png</file>
+        <file>examples/data0708.txt</file>
+        <file>examples/LuHf.xlsx</file>
+        <file>examples/RbSr.xlsx</file>
+        <file>examples/SmNd.xlsx</file>
+        <file>examples/SmNd2.xlsx</file>
+    </qresource>
+</RCC>

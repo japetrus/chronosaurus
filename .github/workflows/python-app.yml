@@ -1,0 +1,47 @@
+# This workflow will install Python dependencies, run pyinstaller and upload the release to GitHub
+
+name: Chronosaurus build
+
+on: [push]  
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest] # Remove macos-latest to limit build minutes during testing...
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install wheel
+        python -m pip install -r requirements.txt
+        python -m pip install -r requirements-dev.txt
+      shell: bash
+    - name: Build app
+      run: |
+        python setup.py bdist_app
+    - name: Create Zip
+      run: |
+        7z a -tzip chronosaurus-$RUNNER_OS.zip ./dist/*
+        7z l chronosaurus-$RUNNER_OS.zip
+      shell: bash
+    - name: Publish
+      id: create_release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "chron*.zip"
+        artifactContentType: application/zip
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    

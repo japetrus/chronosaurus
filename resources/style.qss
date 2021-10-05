@@ -1,0 +1,35 @@
+/* HEADER START
+
+#/ [Named Colors]
+$white = rgb(255,255,255);
+$offwhite = rgb(240,240,240);
+$accent = rgb(114,186,129);
+$grey = rgb(66,66,66);
+$halfgrey = rgb(127,127,127);
+#/ ![Named Colors]
+
+#/ [Palette]
+Palette::All::Window = darker($grey, 120);
+Palette::All::WindowText = named($white);
+Palette::Disabled::WindowText = named($halfgrey);
+Palette::All::Base = darker($grey,150);
+Palette::All::AlternateBase = named($grey);
+Palette::All::ToolTipBase = named($grey);
+Palette::All::ToolTipText = named($white);
+Palette::All::Text = named($white);
+Palette::Disabled::Text = named($halfgrey);
+Palette::All::Dark = darker($grey,200);
+Palette::All::Shadow = darker($grey,300);
+Palette::All::Button = darker($grey,110);
+Palette::All::ButtonText = named($white);
+Palette::Disabled::ButtonText = named($halfgrey);
+Palette::All::BrightText = named($accent);
+Palette::All::Link = darker($accent,100);
+Palette::All::Highlight = named($accent);
+Palette::Disabled::Highlight = darker($halfgrey,120);
+Palette::All::HighlightedText = named($offwhite);
+Palette::Disabled::HighlightedText = named($halfgrey);
+#/ ![Palette]
+
+HEADER END */
+
