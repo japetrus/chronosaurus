@@ -289,7 +289,8 @@ class UPbConcordia(ARViewWidget):
             'datasetName': self.dsname,
             'estyle': self.estyle,
             'markers': self.markers,
-            'plotSettings': self.plot.saveState()
+            'plotSettings': self.plot.saveState(),
+            'tw': self.tw
         }
         return pickle.dumps(s)
 
@@ -298,6 +299,8 @@ class UPbConcordia(ARViewWidget):
         print(s)
         self.estyle = s['estyle']
         self.markers = s['markers']
+        self.tw = s['tw']
+        self.setupConcordia()
         self.addDataset(s['datasetName'])
         self.plot.restoreState(s['plotSettings'])
 
