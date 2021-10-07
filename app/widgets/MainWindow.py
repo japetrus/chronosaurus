@@ -195,7 +195,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             pn = view['plugin_name']
             try:
                 vp = plugins['view'][pn]
-                v = self.create_view(vp)
+                v = self.createView(vp)
                 v.restoreState(view['state'])
                 self.tabWidget.setTabText(self.tabWidget.indexOf(v), view['name'])
             except Exception as e:
