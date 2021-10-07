@@ -1,13 +1,16 @@
 from app.widgets.ViewWidget import ARViewWidget
 from app.widgets.ControlWidget import PlotControlWidget
 from app.widgets.ColumnComboBox import ColumnComboBox
+from app.widgets.QCPItemRichText import QCPItemRichText
 from QCustomPlot_PySide import *
 
 from PySide2.QtWidgets import QComboBox
+from PySide2.QtGui import QPen
+from PySide2.QtCore import Qt
 
 from app.data import datasets
 from app.preferences import applyStyleToPlot
-from app.thirdparty.UPbplot import oneWM
+from app.math import formatResult, weightedMean, formatResult
 from app.datatypes import Columns
 
 import pickle
@@ -46,8 +49,8 @@ class WeightedMean(ARViewWidget):
             print('Could not find error data for %s. Assuming 5 percent.'%(self.column))
             yerr = 0.05*y
 
-        Twm, sm, MSWD = oneWM(y, yerr, 0.95)
-        print('Twm = %f, sm = %f, MSWD = %f'%(Twm, sm, MSWD))
+        res = weightedMean(y, yerr)
+        print(res)
         x = range(len(y))
 
         self.plot.clearGraphs()
@@ -68,9 +71,17 @@ class WeightedMean(ARViewWidget):
         self.line = QCPItemStraightLine(self.plot)
         self.line.position('point1').setType(QCPItemPosition.ptPlotCoords)
         self.line.position('point2').setType(QCPItemPosition.ptPlotCoords)
-        self.line.position('point1').setCoords(x[0], Twm)
-        self.line.position('point2').setCoords(x[-1], Twm)
+        self.line.position('point1').setCoords(x[0], res['internal'][0])
+        self.line.position('point2').setCoords(x[-1], res['internal'][0])
         self.plot.incref(self.line)
+
+        self.caption = QCPItemRichText(self.plot)
+        self.caption.setText(f'<p style="background-color:white;color:black;">{formatResult(res["internal"][0], res["internal"][1])[0]}</p>')
+        self.plot.incref(self.caption)
+        self.caption.position('position').setType(QCPItemPosition.ptAxisRectRatio)
+        self.caption.position('position').setCoords(0.98, 0.02)
+        self.caption.setPen(QPen(Qt.black))
+        self.caption.setPositionAlignment(Qt.AlignTop | Qt.AlignRight)      
 
         if isinstance(self.column, str):
             self.plot.yAxis.setLabel(self.column)
