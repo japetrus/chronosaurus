@@ -22,33 +22,39 @@ def start_import():
     # Figure out ids of selections from baselines
     baselines = []
     for sg in f['SelectionGroups']:
-        j = json.loads(f['SelectionGroups'][sg].value)
+        j = json.loads(f[f'SelectionGroups/{sg}'][()])
         if j['Properties']['Type'] == 'sgBaseline':
             baselines.extend([s['Properties']['UUID'] for s in j['Selections']])
 
-    print('baselines %s'%baselines)
+    # print('baselines %s'%baselines)
     # this is a vector of json strings
     data = f['Results/Data']
     dic = {}
 
     column_names = None
+    
+    meta_keys = []
 
     for djson in data:
-        meta = json.loads(djson)
+        meta = json.loads(djson) 
         res = meta.pop('Results')
-        if not column_names:
-            column_names = list(meta.keys()) + list(res.keys())
-        
-        name = meta['Name']
-        if not name:
-            name = meta['SelectionID']
 
         if meta['SelectionID'] in baselines:
             print('Skipping id = %s'%meta['SelectionID'])
             continue
 
+        if not column_names:
+            column_names = list(meta.keys()) + list(res.keys())
+                
+        name = meta['Name']
+        if not name:
+            name = meta['SelectionID']
+
         dic[name] = list(meta.values()) + list(res.values())
 
+    print(json.dumps(dic, indent=4))
+    print(column_names)
+    
     df = pd.DataFrame.from_dict(dic, orient='index', columns=column_names)
 
     settings.setValue("paths/last_iolite4_import_path", QFileInfo(file_name).absolutePath())
